@@ -15,7 +15,8 @@
                 <span class="time" id="time1"></span>
             </div>
 
-            <img src="{{ url_for('video_feed') }}" class="camera-feed">
+            <video id="webcam" class="camera-feed" autoplay playsinline></video>
+            <canvas id="canvas" style="display:none;" width="640" height="480"></canvas>
 
             <div class="camera-footer">
                 <div>
