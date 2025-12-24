@@ -1,9 +1,13 @@
 {
   "version": 2,
   "builds": [
-    { "src": "app.py", "use": "@vercel/python" }
+    { "src": "app.py", "use": "@vercel/python" },
+    { "src": "static/**", "use": "@vercel/static" }
   ],
   "routes": [
+    { "src": "/static/(.*)", "dest": "/static/$1" },
+    { "src": "/snapshot", "methods": ["POST"], "dest": "app.py" },
+    { "src": "/toggle_motion", "methods": ["POST"], "dest": "app.py" },
     { "src": "/(.*)", "dest": "app.py" }
   ]
 }
