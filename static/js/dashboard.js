@@ -38,33 +38,45 @@ function toggleMotion() {
         });
 }
 
-// 3. New Function: Sends frames for background analysis
-function processFrame() {
-    const context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = canvas.toDataURL('image/jpeg');
+let prevFrame = null;
 
-    fetch("/snapshot", {
-        method: "POST",
-        body: JSON.stringify({ image: imageData }),
-        headers: { "Content-Type": "application/json" }
-    })
-    .then(res => res.json())
-    .then(data => {
-        // Update UI based on motion detection result from app.py
-        const alertBadge = document.querySelector(".camera-card .badge");
-        if (data.motion) {
-            alertBadge.innerText = "Motion Detected";
-            alertBadge.className = "badge danger";
-            document.querySelector(".camera-card").classList.add("alert");
-        } else {
-            alertBadge.innerText = "Monitoring";
-            alertBadge.className = "badge safe";
-            document.querySelector(".camera-card").classList.remove("alert");
+function processFrame() {
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const current = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    if (prevFrame) {
+        let diff = 0;
+        for (let i = 0; i < current.data.length; i += 4) {
+            diff += Math.abs(current.data[i] - prevFrame.data[i]);
         }
-    })
-    .catch(err => console.error("Processing error:", err));
+
+        if (diff > 1_000_000) {
+            showMotion(true);
+        } else {
+            showMotion(false);
+        }
+    }
+
+    prevFrame = current;
 }
+
+function showMotion(isMotion) {
+    const badge = document.querySelector(".camera-card .badge");
+    const card = document.querySelector(".camera-card");
+
+    if (isMotion) {
+        badge.innerText = "Motion Detected";
+        badge.className = "badge danger";
+        card.classList.add("alert");
+    } else {
+        badge.innerText = "Monitoring";
+        badge.className = "badge safe";
+        card.classList.remove("alert");
+    }
+}
+
 
 // Keep the manual snapshot button functional
 function takeSnapshot() {
