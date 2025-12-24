@@ -7,23 +7,27 @@ const ctx = canvas.getContext("2d");
 
 let motionEnabled = true;
 let prevFrame = null;
-const MOTION_THRESHOLD = 900000; // sensitivity (adjustable)
+const MOTION_THRESHOLD = 900000; 
+
+navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+        video.srcObject = stream;
+        video.onloadedmetadata = () => {
+            video.play();
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+        };
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Camera permission denied.");
+    });
+
+
+// sensitivity (adjustable)
 
 // ======================
-// START CAMERA
-// ======================
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-            video.srcObject = stream;
-        })
-        .catch(err => {
-            console.error("Camera error:", err);
-            alert("Camera access is required for motion detection.");
-        });
-} else {
-    alert("Camera not supported in this browser.");
-}
+
 
 // ======================
 // LIVE CLOCK
