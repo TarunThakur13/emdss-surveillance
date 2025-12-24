@@ -1,0 +1,173 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: #0b1220;
+    color: #e5e7eb;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: #020617;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: #e5e7eb;
+    text-decoration: none;
+}
+
+/* HERO */
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.hero h1 {
+    font-size: 48px;
+}
+
+.hero span {
+    color: #22d3ee;
+}
+
+.hero p {
+    max-width: 650px;
+    margin: 20px auto;
+    color: #94a3b8;
+}
+
+.hero-buttons {
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 26px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.primary {
+    background: #06b6d4;
+    color: #020617;
+}
+
+.secondary {
+    border: 1px solid #06b6d4;
+    color: #06b6d4;
+}
+
+/* FEATURES */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 60px;
+}
+
+.feature-card {
+    background: #020617;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* DASHBOARD */
+.dashboard {
+    padding: 40px;
+}
+
+.subtitle {
+    color: #94a3b8;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.camera-card {
+    background: #020617;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.camera-card.alert {
+    border: 2px solid #ef4444;
+}
+
+.camera-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.danger {
+    background: #ef4444;
+}
+
+.safe {
+    background: #10b981;
+}
+
+.camera-feed {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.placeholder {
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+}
+
+.camera-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.status.active {
+    color: #ef4444;
+}
+
+.status.monitoring {
+    color: #10b981;
+}
+
+.controls {
+    margin-top: 30px;
+}
+
+.controls button {
+    padding: 10px 18px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}

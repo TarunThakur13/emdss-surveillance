@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="dashboard">
+    <h2>Live Monitoring Dashboard</h2>
+    <p class="subtitle">
+        Real-time surveillance feed with motion detection analytics
+    </p>
+
+    <div class="dashboard-grid">
+
+        <div class="camera-card alert">
+            <div class="camera-header">
+                <span class="badge danger">Motion Detected</span>
+                <span class="time" id="time1"></span>
+            </div>
+
+            <img src="{{ url_for('video_feed') }}" class="camera-feed">
+
+            <div class="camera-footer">
+                <div>
+                    <strong>Living Room</strong><br>
+                    <small>Ground Floor</small>
+                </div>
+                <span class="status active">● Active</span>
+            </div>
+        </div>
+
+        <div class="camera-card">
+            <div class="camera-header">
+                <span class="badge safe">Monitoring</span>
+                <span class="time" id="time2"></span>
+            </div>
+
+            <div class="placeholder">
+                📷 No second camera
+            </div>
+
+            <div class="camera-footer">
+                <div>
+                    <strong>Main Entrance</strong><br>
+                    <small>Front Door</small>
+                </div>
+                <span class="status monitoring">● Monitoring</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button onclick="toggleMotion()">Toggle Motion</button>
+        <button onclick="takeSnapshot()">Capture Snapshot</button>
+        <span id="motionStatus">Motion: ON</span>
+    </div>
+
+</section>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+{% endblock %}
