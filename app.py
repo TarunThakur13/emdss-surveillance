@@ -52,7 +52,7 @@ def process_frame():
         gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
         motion_detected = False
-        if motion_enabled and frame_idx > bs_frame_count:
+        if motion_enabled:
             motion = md.detect(gray)
             if motion is not None:
                 motion_detected = True
