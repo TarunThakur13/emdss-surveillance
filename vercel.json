@@ -1,13 +1,43 @@
 {
   "version": 2,
   "builds": [
-    { "src": "app.py", "use": "@vercel/python" },
-    { "src": "static/**", "use": "@vercel/static" }
+    {
+      "src": "app.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "static/**",
+      "use": "@vercel/static"
+    }
   ],
   "routes": [
-    { "src": "/static/(.*)", "dest": "/static/$1" },
-    { "src": "/snapshot", "methods": ["POST"], "dest": "app.py" },
-    { "src": "/toggle_motion", "methods": ["POST"], "dest": "app.py" },
-    { "src": "/(.*)", "dest": "app.py" }
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/snapshot",
+      "methods": ["POST"],
+      "dest": "app.py"
+    },
+    {
+      "src": "/toggle_motion",
+      "methods": ["POST"],
+      "dest": "app.py"
+    },
+    {
+      "src": "/dashboard",
+      "methods": ["GET"],
+      "dest": "app.py"
+    },
+    {
+      "src": "/",
+      "methods": ["GET"],
+      "dest": "app.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    }
   ]
 }
