@@ -1,19 +1,33 @@
-const video = document.getElementById('webcam');
-const canvas = document.getElementById('canvas');
-let motion_enabled = true; // Track local state
+// ======================
+// DOM ELEMENTS
+// ======================
+const video = document.getElementById("webcam");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-// 1. Start the camera stream
+let motionEnabled = true;
+let prevFrame = null;
+const MOTION_THRESHOLD = 900000; // sensitivity (adjustable)
+
+// ======================
+// START CAMERA
+// ======================
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ video: true })
-        .then((stream) => {
+        .then(stream => {
             video.srcObject = stream;
         })
-        .catch((err) => {
-            console.error("Camera error: ", err);
-            alert("Please allow camera access to use the dashboard.");
+        .catch(err => {
+            console.error("Camera error:", err);
+            alert("Camera access is required for motion detection.");
         });
+} else {
+    alert("Camera not supported in this browser.");
 }
 
+// ======================
+// LIVE CLOCK
+// ======================
 function updateTime() {
     const now = new Date().toLocaleTimeString();
     document.getElementById("time1").innerText = now;
@@ -21,48 +35,40 @@ function updateTime() {
 }
 setInterval(updateTime, 1000);
 
-// 2. Automated Motion Detection Loop
-// Sends a frame to the server every 500ms (2 times per second)
+// ======================
+// MOTION LOOP (CLIENT SIDE)
+// ======================
 setInterval(() => {
-    if (motion_enabled) {
-        processFrame();
+    if (motionEnabled && video.readyState === 4) {
+        detectMotion();
     }
 }, 500);
 
-function toggleMotion() {
-    fetch("/toggle_motion", { method: "POST" })
-        .then(res => res.json())
-        .then(data => {
-            motion_enabled = data.status === "ON";
-            document.getElementById("motionStatus").innerText = "Motion: " + data.status;
-        });
-}
-
-let prevFrame = null;
-
-function processFrame() {
-    const ctx = canvas.getContext("2d");
+// ======================
+// MOTION DETECTION LOGIC
+// ======================
+function detectMotion() {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-    const current = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-    if (prevFrame) {
-        let diff = 0;
-        for (let i = 0; i < current.data.length; i += 4) {
-            diff += Math.abs(current.data[i] - prevFrame.data[i]);
-        }
-
-        if (diff > 1_000_000) {
-            showMotion(true);
-        } else {
-            showMotion(false);
-        }
+    if (!prevFrame) {
+        prevFrame = frame;
+        return;
     }
 
-    prevFrame = current;
+    let diff = 0;
+    for (let i = 0; i < frame.data.length; i += 4) {
+        diff += Math.abs(frame.data[i] - prevFrame.data[i]);
+    }
+
+    updateUI(diff > MOTION_THRESHOLD);
+    prevFrame = frame;
 }
 
-function showMotion(isMotion) {
+// ======================
+// UI UPDATE
+// ======================
+function updateUI(isMotion) {
     const badge = document.querySelector(".camera-card .badge");
     const card = document.querySelector(".camera-card");
 
@@ -77,9 +83,19 @@ function showMotion(isMotion) {
     }
 }
 
+// ======================
+// TOGGLE MOTION
+// ======================
+function toggleMotion() {
+    motionEnabled = !motionEnabled;
+    document.getElementById("motionStatus").innerText =
+        "Motion: " + (motionEnabled ? "ON" : "OFF");
+}
 
-// Keep the manual snapshot button functional
+// ======================
+// MANUAL SNAPSHOT
+// ======================
 function takeSnapshot() {
-    processFrame();
-    alert("Manual snapshot request sent!");
+    detectMotion();
+    alert("Snapshot captured locally!");
 }
